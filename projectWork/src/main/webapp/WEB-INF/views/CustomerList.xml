@@ -1,0 +1,6 @@
+<Context path="/CustomerList" docBase="E:\88_TEST\02_BUILD\CustomerList"
+  debug="0" prvileged="true" reloadable="true">
+  <Logger className="org.apache.catalina.logger.FileLogger"
+    directory="logs" prefix="localhost_log." suffix=".txt"
+    timestame="true"/>
+</Context>

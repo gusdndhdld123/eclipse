@@ -1,0 +1,52 @@
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" language="java" %>
+<html>
+
+<head>
+</head>
+<body>
+<form>
+ <table width="1400" height="650">
+  <tr>
+   <td width="100%" height="10%">ȸ������
+   </td>
+  </tr>
+  <tr>
+   <td height="60%" align="center" valign="top">
+   <hr><br>
+   <p align="left" style="padding-left:160px">
+   <br><br>
+   ID : <input type="text" size="10" maxlength="15" name="id" id = "id">
+   		<input type = "button" name = "idChk" value = "�ߺ�üũ">
+   <br><br>
+   ��й�ȣ : <input type="password" size="15" maxlength="20" name="pass" id = "pass"><br><br>
+   ��й�ȣ Ȯ�� : <input type="password" size="15" maxlength="20" name="pass2" id = "pass2"><br><br>
+   �̸� : <input type="text" size="13" name="name" id = "name" onkeyup="fncNameKeyUp(this)"><br><br>
+   �̸��� : <input type="text" size="15" name="email1" id = "email1">@<input type="text" size="15" name="email2" id = "email2"><br><br>
+   �޴��� : <select name="ph1">
+       <option value="010">010</option>
+       <option value="011">011</option>
+       <option value="016">016</option>
+       <option value="017">017</option>
+       <option value="019">019</option>
+     </select>
+     - <input type="text" name="ph2" size="5" maxlength="4" id = "ph2"> - <input type="text" name="ph3" size="5" maxlength="4" id = "ph3"><br><br>
+   ���� : <input type="radio" name="gender" value="����"> ����&nbsp;&nbsp;
+   <input type="radio" name="gender" value="����"> ����<br><br>
+   �ֹι�ȣ : <input type = "text" name = "jumin1" id = "jumin1"> -  <input type = "password" name = "jumin2" id = "jumin2"><br><br>
+   �ּ� : <input type="text" name="address" size="15" maxlength="15"><br>
+   *�ּҴ� (��/��)�� �Է����ּ��� (��: ��⵵, ����Ư����, ��󳲵� ��)
+   </p>
+  </td>
+  </tr>
+  <tr>
+   <td align="center">
+   <hr><br>
+    <input type="button"  id = "regi_btn" value="���Խ�û">&nbsp;
+    <input type="reset" value="�ٽ��Է�">&nbsp;
+    <input type="button" value="���">
+   </td>
+  </tr>
+ </table>
+</form>
+</body>
+</html>

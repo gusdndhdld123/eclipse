@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE configuration PUBLIC "-//mybatis.org//DTD Config 3.0//EN" "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+    <!-- MyBatis 관련 다른 설정들 (필요한 경우) -->
+    
+    <!-- 매퍼 파일 설정 -->
+    <mappers>
+         
+        <mapper resource="mapper/BoardMapper.xml"/>
+		<mapper resource="mapper/FoodMapper.xml"/>
+		<mapper resource="mapper/PizzaMapper.xml"/>
+    </mappers>
+    
+</configuration>

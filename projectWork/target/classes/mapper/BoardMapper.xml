@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.com.com.mapper.BoardMapper">
+
+    <sql id="BaseBoardColumns">
+	    seq AS seq,
+	    mem_name AS memName,
+	    mem_id AS memId,
+	    board_subject AS boardSubject,
+	    board_content AS boardContent,
+	    reg_date AS regDate,
+	    upt_date AS uptDate,
+	    view_cnt AS viewCnt,
+	    useyn AS useyn
+	</sql>
+	
+	<sql id="UpoladColumns">
+		file_seq AS fileSeq,
+		real_name AS realName,
+		save_name AS saveName,
+		reg_date AS regDate,
+		save_path AS savePath,
+		list_seq AS listSeq
+	</sql>
+	
+	<sql id = "searchQ">	
+				<choose>
+	                <when test="searchType == 'subject'">
+	                    AND board_subject LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'content'">
+	                    AND board_content LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'writer'">
+	                    AND mem_id LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'all'">
+	                    AND (board_subject LIKE '%' || #{keyword} || '%'
+	                        OR board_content LIKE '%' || #{keyword} || '%'
+	                        OR mem_id LIKE '%' || #{keyword} || '%')
+	                </when>
+	            </choose>
+	            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+	                AND reg_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+	            </if>
+	</sql>
+	
+	<select id="selectBoardList" parameterType="map" resultType="com.com.com.DTO.BoardDTO">
+	    SELECT 
+	    	<include refid="BaseBoardColumns"/>
+	    FROM (
+			SELECT  seq,
+				    mem_name,
+				    mem_id,
+				    board_subject,
+				    board_content,
+				    reg_date,
+				    upt_date,
+				    view_cnt,
+				    useyn,
+	               	row_number() over(order by reg_date desc) AS rn
+	        FROM board_study
+	        <where>
+	            <choose>
+	                <when test="searchType == 'subject'">
+	                    AND board_subject LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'content'">
+	                    AND board_content LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'writer'">
+	                    AND mem_id LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'all'">
+	                    AND (board_subject LIKE '%' || #{keyword} || '%'
+	                        OR board_content LIKE '%' || #{keyword} || '%'
+	                        OR mem_id LIKE '%' || #{keyword} || '%')
+	                </when>
+	            </choose>
+	            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+	                AND reg_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+	            </if>
+	        </where>
+	    ) 
+	    WHERE rn BETWEEN (#{pageIndex} - 1) * #{pageSize} + 1 AND #{pageIndex} * #{pageSize}
+	</select>
+
+
+
+
+
+
+
+
+
+	
+	<select id="countBoardList" parameterType="map" resultType="int">
+	    SELECT COUNT(seq)
+	    FROM board_study	    
+	     <where>
+	            <choose>
+	                <when test="searchType == 'subject'">
+	                    AND board_subject LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'content'">
+	                    AND board_content LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'writer'">
+	                    AND mem_id LIKE '%' || #{keyword} || '%'
+	                </when>
+	                <when test="searchType == 'all'">
+	                    AND (board_subject LIKE '%' || #{keyword} || '%'
+	                        OR board_content LIKE '%' || #{keyword} || '%'
+	                        OR mem_id LIKE '%' || #{keyword} || '%')
+	                </when>
+	            </choose>
+	            <if test="startDate != null and startDate != '' and endDate != null and endDate != ''">
+	                AND reg_date BETWEEN TO_DATE(#{startDate}, 'YYYY-MM-DD') AND TO_DATE(#{endDate}, 'YYYY-MM-DD')
+	            </if>
+	        </where>
+	</select>
+	
+	<select id="lastboardSeq" resultType="Long">
+	    SELECT NVL(MAX(seq), 0) FROM board_study
+	</select>
+	<select id="lastfileSeq" resultType="Long">
+	    SELECT NVL(MAX(file_seq), 0) FROM file_study_table
+	</select>
+
+	
+	<insert id="CreateBoard" parameterType="com.com.com.DTO.BoardDTO" >
+	    
+	    INSERT INTO board_study (seq, mem_name, mem_id, board_subject, board_content, reg_date, view_cnt)
+	    VALUES ( #{seq}, #{memName}, #{memId}, #{boardSubject}, #{boardContent}, #{regDate}, #{viewCnt})
+	</insert>
+
+
+	
+	<insert id="uploadImage" parameterType="com.com.com.DTO.UploadDTO">
+	    INSERT INTO file_study_table (file_seq, real_name, save_name, reg_date, save_path, list_seq) 
+		VALUES (
+    		#{fileSeq},
+	        #{realName},
+	        #{saveName},
+	        #{regDate},
+	        #{savePath},
+	        #{listSeq}
+	    )
+	</insert>
+	
+	<select id="selectUploadList" parameterType="long" resultType="com.com.com.DTO.UploadDTO">
+	    SELECT  <include refid="UpoladColumns"/>
+	    FROM file_study_table
+	    WHERE list_seq = #{listSeq}
+	</select>
+	
+	<select id="downloadFile" parameterType="long" resultType="com.com.com.DTO.UploadDTO">
+	    SELECT  <include refid="UpoladColumns"/>
+	    FROM file_study_table
+	    WHERE file_seq = #{fileSeq}
+	</select>
+
+	
+	<select id="ReadBoard" parameterType="long" resultType="com.com.com.DTO.BoardDTO">
+	    SELECT  <include refid="BaseBoardColumns"/>
+	    FROM board_study
+	    WHERE seq = #{seq}
+	</select>
+	
+	<update id="UpdateBoard" parameterType="com.com.com.DTO.BoardDTO">
+		UPDATE board_study
+		SET mem_id = #{memId},
+			board_subject = #{boardSubject},
+			board_content = #{boardContent},
+			upt_date = #{uptDate}
+		WHERE seq = #{seq}
+	</update>
+	<update id="increaseViewCount" parameterType="long">
+		UPDATE board_study
+		SET view_cnt =  view_cnt +1
+		WHERE seq = #{seq}
+	</update>
+	<delete id="DeleteBoard" parameterType="long">
+		DELETE FROM board_study
+		WHERE seq = #{seq}
+	</delete>
+	
+	<delete id="DeleteFile" parameterType="Long">
+		DELETE FROM file_study_table
+	    WHERE list_seq = #{listSeq}
+	</delete>
+</mapper>

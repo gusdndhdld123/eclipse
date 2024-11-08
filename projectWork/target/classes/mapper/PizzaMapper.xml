@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.com.com.mapper.PizzaMapper">
+	<sql id="PizzaColumns">
+	    menu_idx AS menuIdx,
+		menu_name AS menuName,
+		menu_img1 AS menuImg1,
+		menu_img2 AS menuImg2,
+		menu_img3 AS menuImg3,
+		menu_price_s AS menuPriceS,
+		menu_price_m AS menuPriceM,
+		menu_price_l AS menuPriceL,
+		menu_discription AS menuDiscription,
+		menu_dough AS menuDough,
+		menu_type AS menuType,
+		menu_set AS menuSet,
+		menu_side AS menuSide,
+		menu_edge AS menuEdge,
+		detail_img AS detailImg,
+		with_good AS withGood,
+		reg_date AS regDate,
+		sub_title AS subTitle
+	</sql>
+	<select id="selectPizzaList" resultType="com.com.com.DTO.PizzaDTO">
+	    select  <include refid="PizzaColumns"/>
+	    from jhw_menu
+	</select>
+	<select id="lastPizzaIdx" resultType="int">
+	    SELECT NVL(MAX(menu_idx), 0) FROM jhw_menu
+	</select>
+	<select id="readPizza" parameterType="int" resultType="com.com.com.DTO.PizzaDTO">
+		select <include refid="PizzaColumns"/>
+		from jhw_menu
+		where menu_idx = #{menuIdx}
+	</select>
+	<insert id="CreatePizza" parameterType="com.com.com.DTO.PizzaDTO" >
+	    INSERT INTO jhw_menu ( menu_idx, menu_name,sub_title ,menu_img1, menu_img2, menu_img3, menu_edge,  menu_price_s, menu_price_m, menu_price_l, menu_discription, menu_dough, menu_type, menu_set, menu_side, detail_img, reg_date)
+	    VALUES ( #{menuIdx}, #{menuName},#{subTitle}, #{menuImg1}, #{menuImg2}, #{menuImg3}, #{menuEdge}, #{menuPriceS}, #{menuPriceM}, #{menuPriceL}, #{menuDiscription}, #{menuDough}, #{menuType}, #{menuSet}, #{menuSide}, #{detailImg}, #{regDate})
+	</insert>
+</mapper>

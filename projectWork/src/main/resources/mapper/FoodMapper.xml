@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.com.com.mapper.FoodMapper">
+	<sql id="BaseFoodColumns">
+	    id,
+	    price,
+	    good,
+	    code,
+	    food,
+	    description
+	</sql>
+	<select id="selectFoodList" resultType="com.com.com.DTO.FoodDTO">
+	    select  <include refid="BaseFoodColumns"/>
+	    from react_exam_data
+	</select>
+	<select id="selectKorFoodList" resultType="com.com.com.DTO.FoodDTO">
+	    select  <include refid="BaseFoodColumns"/>
+	    from react_exam_data
+	    where code = 'kor'
+	</select>
+	<select id="selectJpaFoodList" resultType="com.com.com.DTO.FoodDTO">
+	    select  <include refid="BaseFoodColumns"/>
+	    from react_exam_data
+	    where code = 'jpa'
+	</select>
+	<select id="selectChaFoodList" resultType="com.com.com.DTO.FoodDTO">
+	    select  <include refid="BaseFoodColumns"/>
+	    from react_exam_data
+	    where code = 'cha'
+	</select>
+	<insert id="CreateFood" parameterType="com.com.com.DTO.FoodDTO" >
+	    INSERT INTO react_exam_data ( id, price, good, code, food, description)
+	    VALUES ( #{id}, #{price}, #{good}, #{code}, #{food}, #{description})
+	</insert>
+	<select id="ReadFood" parameterType="long" resultType="com.com.com.DTO.FoodDTO">
+		select  <include refid="BaseFoodColumns"/>
+	    from react_exam_data
+	    where id = #{id}
+	</select>
+	<update id="UpdateFood" parameterType="com.com.com.DTO.FoodDTO">
+		UPDATE react_exam_data
+		SET id = #{id},
+			price = #{price},
+			good = #{good},
+			code = #{code},
+			food = #{food},
+			description = #{description}
+		WHERE id = #{id}
+	</update>
+	<delete id="DeleteFood" parameterType="long">
+		DELETE FROM react_exam_data
+		WHERE id = #{id}
+	</delete>
+	<update id="increaseGoodCount" parameterType="long">
+		UPDATE react_exam_data
+		SET good =  good +1
+		WHERE id = #{id}
+	</update>
+	<update id="decreaseGoodCount" parameterType="long">
+		UPDATE react_exam_data
+		SET good =  good -1
+		WHERE id = #{id}
+	</update>
+	<select id="lastFoodSeq" resultType="Long">
+	    SELECT NVL(MAX(id), 0) FROM  react_exam_data
+	</select>
+</mapper>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.com.com.mapper.UserMapper">
+	<sql id="UserColumns">
+	    user_idx AS userIdx,
+	    user_name AS userName,
+	    user_id AS userId,
+	    user_pw AS userPw,
+	    user_phone AS userPhone,
+	    user_email AS userEmail,
+	    user_address AS userAddress,
+	    user_detailaddress AS userDetailaddress,
+	    mkt_email AS mktEmail,
+	    mkt_sms AS mktSMS,
+	    mkt_adr AS mktAdr
+	    
+	</sql>
+	<select id="selectUserId" parameterType="String" resultType="com.com.com.DTO.UserDTO">
+	    select <include refid="UserColumns"/>
+	    from jhw_user
+	    where user_id = #{userId}
+	</select>
+	<select id="selectUserPw" parameterType="String" resultType="com.com.com.DTO.UserDTO">
+	    select <include refid="UserColumns"/>
+	    from jhw_user
+	    where user_idx = #{userIdx} AND user_pw = #{userPw}
+	</select>
+	<select id="selectUserIdx" parameterType="int" resultType="com.com.com.DTO.UserDTO">
+	    select <include refid="UserColumns"/>
+	    from jhw_user
+	    where user_idx = #{userIdx}
+	</select>
+	<insert id="signUp" parameterType="com.com.com.DTO.UserDTO">
+		INSERT INTO jhw_user (user_idx, user_name, user_id, user_pw, user_phone, user_email, user_address,user_detailaddress, mkt_email, mkt_sms, mkt_adr)
+		VALUES (#{userIdx}, #{userName}, #{userId}, #{userPw}, #{userPhone}, #{userEmail}, #{userAddress},#{userDetailAddress}, #{mktEmail}, #{mktSms}, #{mktAdr})
+	</insert>
+	<select id="lastIdx" resultType="int">
+		SELECT NVL(MAX(user_idx), 0) FROM jhw_user
+	</select>
+</mapper>
